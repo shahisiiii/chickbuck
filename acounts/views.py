@@ -6,26 +6,33 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated,AllowAny
+
 
 
 # Create your views here.
 
 class Register(APIView):
+    permission_classes = [AllowAny,]
     def post(self,request):
         first_name = request.data.get('first_name')
         username = request.data.get('username')
         email = request.data.get('email')
         password = request.data.get('password')
 
-        if not User.objects.filter(username=username):
-            User.objects.create_user(
+        if not User.objects.filter(username=username).exists():
+            user =User.objects.create_user(
+            
                 first_name=first_name,
                 username=username,
                 email=email,
                 password=password
             )
+            refresh = RefreshToken.for_user(user)
             return Response({
-                'message':'Account created succsess'
+                'message':'Account created succsessfully',
+                'access_token': str(refresh.access_token),
+                'refresh_token': str(refresh)
             }
             )
         return Response(
@@ -38,6 +45,8 @@ class Register(APIView):
     
 
 class Login(APIView):
+    permission_classes = [AllowAny,]
+
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
