@@ -10,6 +10,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ItemsSerializer(serializers.ModelSerializer):
 
+    category_name = serializers.ReadOnlyField(source='category.category')
+
     class Meta:
         model = Items
-        fields = '__all__'
+        fields = ['id', 'name', 'description', 'price', 'is_favourite', 'category_name', 'item_image']
