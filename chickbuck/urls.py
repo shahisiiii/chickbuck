@@ -22,10 +22,14 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from rest_framework.routers import DefaultRouter
-from chickbuck_api.views import CategoryView,ItemsView
+from chickbuck_api.views import CategoryView,ItemsView,CategoryReadOnlyView,ItemReadOnlyView,CartItemViewSet
 
 router = DefaultRouter()
 router.register(r'categories', CategoryView)
+router.register(r'categoriesuser', CategoryReadOnlyView)
+router.register(r'addtocart', CartItemViewSet)
+
+router.register(r'itemsuser', ItemReadOnlyView)
 router.register(r'items', ItemsView)
 
 urlpatterns = [
